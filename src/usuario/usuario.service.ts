@@ -11,6 +11,7 @@ import { Usuario } from './entities/usuario.entity';
 import { Rol } from 'src/rol/entities/rol.entity';
 import { Cliente } from 'src/cliente/entities/cliente.entity';
 import { Profesional } from 'src/profesional/entities/profesional.entity';
+import { ProfesionalProfesion } from 'src/profesional/entities/profesionalprofesion.entity';
 
 @Injectable()
 export class UsuarioService {
@@ -28,15 +29,16 @@ export class UsuarioService {
     private profesionalRepository: Repository<Profesional>,
   ) {}
 
-  async crearUsuarioConRol(data: any): Promise<Usuario> {
+  async crearUsuarioConRol(data: CreateUsuarioDto): Promise<Usuario> {
     // 1. Buscar rol
-    let rol = await this.rolRepository.findOneBy({ idRol: data.rol });
-    if (!rol) throw new BadRequestException(`Rol con id ${data.rol} no existe`);
+    let rol = await this.rolRepository.findOneBy({ idRol: data.idRol });
+    if (!rol)
+      throw new BadRequestException(`Rol con id ${data.idRol} no existe`);
 
     // 2. Crear usuario
     const usuario = this.usuarioRepository.create({
-      nombreCompleto: data.nombre,
-      nombreDeUsuario: data.apellido,
+      nombreCompleto: data.nombreCompleto,
+      nombreDeUsuario: data.nombreDeUsuario,
       email: data.email,
       contrasena: data.contrasena,
       rol,
@@ -44,15 +46,30 @@ export class UsuarioService {
     await this.usuarioRepository.save(usuario);
 
     // 3. Crear Cliente o Profesional según rol
-    if (data.rol === 2) {
+    if (data.idRol === 2) {
       let cliente = this.clienteRepository.create({ usuario });
       await this.clienteRepository.save(cliente);
     }
 
-    if (data.rol === 3) {
+    if (data.idRol === 3) {
+      // data.idProfesion puede ser un número o un array de ids
+      let ids: number[] =
+        data.idProfesion != null
+          ? Array.isArray(data.idProfesion)
+            ? data.idProfesion
+            : [data.idProfesion]
+          : [];
+
+      const profesionesIntermedias = ids.map((id) =>
+        this.profesionalRepository.manager.create(ProfesionalProfesion, {
+          profesion: { idProfesion: id },
+          profesional,
+        }),
+      );
+
       let profesional = this.profesionalRepository.create({
         usuario,
-        profesiones: data.idProfesion,
+        profesiones: profesionesIntermedias,
       });
       await this.profesionalRepository.save(profesional);
     }

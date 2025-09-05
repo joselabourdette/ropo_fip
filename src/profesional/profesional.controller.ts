@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProfesionalService } from './profesional.service';
 import { CreateProfesionalDto } from './dto/create-profesional.dto';
@@ -27,17 +28,28 @@ export class ProfesionalController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.profesionalService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.profesionalService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateProfesionalDto) {
-    return this.profesionalService.update(+id, updateDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDto: UpdateProfesionalDto,
+  ) {
+    return this.profesionalService.update(id, updateDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.profesionalService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.profesionalService.remove(id);
+  }
+
+  @Post(':id/asignar-profesiones')
+  asignarProfesiones(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('idsProfesion') idsProfesion: number[],
+  ) {
+    return this.profesionalService.asignarProfesiones(id, idsProfesion);
   }
 }

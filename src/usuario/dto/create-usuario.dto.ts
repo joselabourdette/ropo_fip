@@ -5,4 +5,5 @@ export class CreateUsuarioDto {
   contrasena: string;
   fechaRegistro: Date;
   idRol: number;
+  idProfesion?: number[];
 }

@@ -16,7 +16,7 @@ export class ProfesionalProfesion {
   @JoinColumn({ name: 'idProfesional' })
   profesional: Profesional;
 
-  @ManyToOne(() => Profesion, (profesion) => profesion.ProfesionalProfesion, {
+  @ManyToOne(() => Profesion, (profesion) => profesion.profesionales, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'idProfesion' })

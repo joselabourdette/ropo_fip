@@ -1,14 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ProfesionService } from './profesion.service';
 import { CreateProfesionDto } from './dto/create-profesion.dto';
 import { UpdateProfesionDto } from './dto/update-profesion.dto';
+import { Profesion } from './entities/profesion.entity';
 
 @Controller('profesion')
 export class ProfesionController {
   constructor(private readonly profesionService: ProfesionService) {}
 
   @Post()
-  create(@Body() createProfesionDto: CreateProfesionDto) {
+  async create(
+    @Body() createProfesionDto: CreateProfesionDto,
+  ): Promise<Profesion> {
     return this.profesionService.create(createProfesionDto);
   }
 
@@ -23,7 +34,10 @@ export class ProfesionController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfesionDto: UpdateProfesionDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProfesionDto: UpdateProfesionDto,
+  ) {
     return this.profesionService.update(+id, updateProfesionDto);
   }
 

@@ -20,8 +20,9 @@ export class RolService {
     return this.rolRepository.findOneBy({ idRol: id });
   }
 
-  create(createRolDto: CreateRolDto) {
-    return 'This action adds a new rol';
+  async create(createRolDto: CreateRolDto): Promise<Rol> {
+    const rol = this.rolRepository.create(createRolDto);
+    return this.rolRepository.save(rol);
   }
 
   update(id: number, updateRolDto: UpdateRolDto) {

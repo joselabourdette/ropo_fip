@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Profesional } from './entities/profesional.entity';
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { Profesion } from '../profesion/entities/profesion.entity';
@@ -58,21 +58,17 @@ export class ProfesionalService {
 
     const savedProfesional = await this.profesionalRepo.save(profesional);
 
-    // Si vienen profesiones
+    // Asignar profesiones si vienen
     if (dto.profesionesIds && dto.profesionesIds.length) {
-      savedProfesional.profesiones = dto.profesionesIds.map(
-        (id) =>
-          ({
-            idProfesional: savedProfesional.idProfesional,
-            idProfesion: id,
-          }) as ProfesionalProfesion,
+      await this.asignarProfesiones(
+        savedProfesional.idProfesional,
+        dto.profesionesIds,
       );
-
-      await this.profesionalRepo.save(savedProfesional);
     }
 
     return this.findOne(savedProfesional.idProfesional);
   }
+
   findAll() {
     return this.profesionalRepo.find({
       relations: [
@@ -109,17 +105,16 @@ export class ProfesionalService {
     if (dto.descripcion !== undefined)
       profesional.descripcion = dto.descripcion;
 
+    await this.profesionalRepo.save(profesional);
+
+    // Actualizar profesiones si vienen
     if (dto.profesionesIds) {
-      profesional.profesiones = dto.profesionesIds.map(
-        (id) =>
-          ({
-            idProfesional: profesional.idProfesional,
-            idProfesion: id,
-          }) as ProfesionalProfesion,
+      await this.asignarProfesiones(
+        profesional.idProfesional,
+        dto.profesionesIds,
       );
     }
 
-    await this.profesionalRepo.save(profesional);
     return this.findOne(profesional.idProfesional);
   }
 
@@ -133,21 +128,38 @@ export class ProfesionalService {
       throw new NotFoundException(`Profesional ${id} no encontrado`);
     }
 
-    // Si no tenés ON DELETE CASCADE en la BD, borrá manualmente las relaciones
+    // Borrar relaciones intermedias
     if (profesional.profesiones && profesional.profesiones.length) {
-      await this.profesionalRepo.manager
-        .getRepository('profesionalprofesion')
-        .delete({ idProfesional: id });
+      await this.ppRepo.delete({ profesional: { idProfesional: id } });
     }
 
-    // Si querés también borrar las publicaciones asociadas
+    // Borrar publicaciones asociadas
     if (profesional.publicaciones && profesional.publicaciones.length) {
       await this.profesionalRepo.manager
         .getRepository('publicacion')
         .delete({ profesional: { idProfesional: id } });
     }
 
-    // Finalmente borrá el profesional
     await this.profesionalRepo.remove(profesional);
+  }
+
+  async asignarProfesiones(profesionalId: number, idsProfesion: number[]) {
+    const profesional = await this.profesionalRepo.findOne({
+      where: { idProfesional: profesionalId },
+    });
+    if (!profesional) throw new NotFoundException('Profesional no encontrado');
+
+    // Primero eliminar relaciones existentes
+    await this.ppRepo.delete({ profesional: { idProfesional: profesionalId } });
+
+    // Crear nuevas relaciones
+    const relaciones = idsProfesion.map((id) =>
+      this.ppRepo.create({
+        profesional,
+        profesion: { idProfesion: id },
+      }),
+    );
+
+    return this.ppRepo.save(relaciones);
   }
 }

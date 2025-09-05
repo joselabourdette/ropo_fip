@@ -14,5 +14,5 @@ export class Profesion {
 
   // Relación con tabla intermedia
   @OneToMany(() => ProfesionalProfesion, (pp) => pp.profesion)
-  ProfesionalProfesion: ProfesionalProfesion[];
+  profesionales: ProfesionalProfesion[];
 }

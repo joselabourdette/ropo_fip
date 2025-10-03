@@ -29,13 +29,13 @@ export class ProfesionalService {
     @InjectRepository(ProfesionalProfesion)
     private ppRepo: Repository<ProfesionalProfesion>,
   ) {}
-
+// Crear nuevo profesional
   async create(dto: CreateProfesionalDto): Promise<Profesional> {
     const usuario = await this.usuarioRepo.findOne({
       where: { idUsuario: dto.idUsuario },
       relations: ['rol', 'profesional'],
     });
-
+// Validar usuario
     if (!usuario)
       throw new NotFoundException(`Usuario ${dto.idUsuario} no existe`);
 
@@ -48,17 +48,17 @@ export class ProfesionalService {
     if (usuario.profesional)
       throw new BadRequestException(`Usuario ya es Profesional`);
 
-    // Crear profesional con datos del DTO
+    // Crear profesional 
     const profesional = this.profesionalRepo.create({
       usuario,
       matricula: dto.matricula,
       descripcion: dto.descripcion,
-      calificacionPromedio: 0, // Siempre iniciar en 0
+      calificacionPromedio: 0, 
     });
 
     const savedProfesional = await this.profesionalRepo.save(profesional);
 
-    // Asignar profesiones si vienen
+    // Asignar profesiones 
     if (dto.profesionesIds && dto.profesionesIds.length) {
       await this.asignarProfesiones(
         savedProfesional.idProfesional,
@@ -68,7 +68,7 @@ export class ProfesionalService {
 
     return this.findOne(savedProfesional.idProfesional);
   }
-
+// Listar todos los profesionales
   findAll() {
     return this.profesionalRepo.find({
       relations: [
@@ -79,7 +79,7 @@ export class ProfesionalService {
       ],
     });
   }
-
+// Buscar profesional por ID
   async findOne(id: number) {
     const profesional = await this.profesionalRepo.findOne({
       where: { idProfesional: id },
@@ -95,7 +95,15 @@ export class ProfesionalService {
       throw new NotFoundException(`Profesional ${id} no encontrado`);
     return profesional;
   }
+// Buscar profesional por ID de usuario
+  async findByUsuario(idUsuario: number) {
+  return this.profesionalRepo.findOne({
+    where: { usuario: { idUsuario } },
+    relations: ["usuario", "profesiones"], 
+  });
+}
 
+// Actualizar profesional y sus profesiones
   async update(id: number, dto: UpdateProfesionalDto): Promise<Profesional> {
     const profesional = await this.findOne(id);
     if (dto.calificacionPromedio !== undefined) {
@@ -107,7 +115,7 @@ export class ProfesionalService {
 
     await this.profesionalRepo.save(profesional);
 
-    // Actualizar profesiones si vienen
+    // Actualizar profesiones si se proporcionan IDs
     if (dto.profesionesIds) {
       await this.asignarProfesiones(
         profesional.idProfesional,
@@ -117,7 +125,7 @@ export class ProfesionalService {
 
     return this.findOne(profesional.idProfesional);
   }
-
+// Eliminar profesional y sus relaciones
   async remove(id: number): Promise<void> {
     const profesional = await this.profesionalRepo.findOne({
       where: { idProfesional: id },
@@ -142,7 +150,7 @@ export class ProfesionalService {
 
     await this.profesionalRepo.remove(profesional);
   }
-
+// Asignar profesiones a un profesional
   async asignarProfesiones(profesionalId: number, idsProfesion: number[]) {
     const profesional = await this.profesionalRepo.findOne({
       where: { idProfesional: profesionalId },

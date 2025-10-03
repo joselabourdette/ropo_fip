@@ -1,6 +1,6 @@
 import { Entity, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Profesional } from './profesional.entity';
-import { Profesion } from 'src/profesion/entities/profesion.entity';
+import { Profesion } from '../../profesion/entities/profesion.entity';
 
 @Entity('profesionalprofesion')
 export class ProfesionalProfesion {

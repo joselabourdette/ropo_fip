@@ -8,7 +8,7 @@ import {
   Unique,
 } from 'typeorm';
 import { Usuario } from '../../usuario/entities/usuario.entity';
-import { Calificacion } from 'src/calificacion/entities/calificacion.entity';
+import { Calificacion } from '../../calificacion/entities/calificacion.entity';
 
 @Entity('Cliente')
 @Unique(['usuario'])

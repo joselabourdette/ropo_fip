@@ -229,6 +229,15 @@ crear profesiones
 }
 
 {
+"idProfesion": 21,
+
+ "nombre": "Zapatero"
+
+"descripcion": "Venta de calzados"
+
+}
+
+{
 "idProfesion": ,
 
  "nombre": " "

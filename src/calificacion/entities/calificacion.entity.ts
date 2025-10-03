@@ -5,8 +5,8 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Publicacion } from 'src/publicacion/entities/publicacion.entity';
-import { Cliente } from 'src/cliente/entities/cliente.entity';
+import { Publicacion } from '../../publicacion/entities/publicacion.entity';
+import { Cliente } from '../../cliente/entities/cliente.entity';
 
 @Entity('calificacion')
 export class Calificacion {

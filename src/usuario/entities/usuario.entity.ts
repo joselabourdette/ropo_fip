@@ -10,7 +10,7 @@ import {
 import { Rol } from '../../rol/entities/rol.entity';
 import { Cliente } from '../../cliente/entities/cliente.entity';
 import { Profesional } from '../../profesional/entities/profesional.entity';
-import { Mensaje } from 'src/mensaje/entities/mensaje.entity';
+import { Mensaje } from '../../mensaje/entities/mensaje.entity';
 
 @Entity('Usuario')
 export class Usuario {

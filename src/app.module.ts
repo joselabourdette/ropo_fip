@@ -43,7 +43,7 @@ import { Mensaje } from './mensaje/entities/mensaje.entity';
         Calificacion,
         Mensaje,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
 
     //esto es lo que había antes

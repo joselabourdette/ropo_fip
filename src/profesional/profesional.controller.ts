@@ -26,10 +26,15 @@ export class ProfesionalController {
   findAll(): Promise<Profesional[]> {
     return this.profesionalService.findAll();
   }
-
+// busca por idProfesional
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.profesionalService.findOne(id);
+  }
+// busca por idUsuario, si no sabemos el idProfesional.
+  @Get("usuario/:idUsuario")
+  findByUsuario(@Param("idUsuario") idUsuario: number) {
+    return this.profesionalService.findByUsuario(+idUsuario);
   }
 
   @Patch(':id')

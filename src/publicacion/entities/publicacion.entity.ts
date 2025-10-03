@@ -6,8 +6,8 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { Profesional } from 'src/profesional/entities/profesional.entity';
-import { Calificacion } from 'src/calificacion/entities/calificacion.entity';
+import { Profesional } from '../../profesional/entities/profesional.entity';
+import { Calificacion } from '../../calificacion/entities/calificacion.entity';
 
 export enum EstadoPublicacion {
   ACTIVA = 'activa',
@@ -20,11 +20,17 @@ export class Publicacion {
   @PrimaryGeneratedColumn()
   idPublicacion: number;
 
-  @Column({ length: 200 })
+  @Column({ type: 'varchar', length: 255 })
   titulo: string;
 
   @Column({ type: 'text', nullable: true })
   descripcion?: string;
+
+  @Column({ type: 'text', nullable: true })
+  ubicacion?: string;
+
+  @Column({ type: 'simple-array', nullable: true })
+  imagenes?: string[];
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   fechaPublicacion: Date;

@@ -1,8 +1,10 @@
+import { EstadoPublicacion } from "../entities/publicacion.entity";
+
 export class CreatePublicacionDto {
-  idPublicacion: number;
   idProfesional: number;
   titulo: string;
   descripcion?: string;
-  fechaPublicacion: Date;
-  estado: string;
+  ubicacion?: string;
+  imagen?: string[];
+  estado?: EstadoPublicacion;
 }

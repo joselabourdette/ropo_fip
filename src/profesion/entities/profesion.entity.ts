@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { ProfesionalProfesion } from 'src/profesional/entities/profesionalprofesion.entity';
+import { ProfesionalProfesion } from '../../profesional/entities/profesionalprofesion.entity';
 
 @Entity('profesion')
 export class Profesion {

@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Usuario } from '../../usuario/entities/usuario.entity';
-import { Publicacion } from 'src/publicacion/entities/publicacion.entity';
+import { Publicacion } from '../../publicacion/entities/publicacion.entity';
 import { ProfesionalProfesion } from './profesionalprofesion.entity';
 
 @Entity('Profesional')

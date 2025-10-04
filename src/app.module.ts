@@ -10,6 +10,7 @@ import { ProfesionModule } from './profesion/profesion.module';
 import { PublicacionModule } from './publicacion/publicacion.module';
 import { CalificacionModule } from './calificacion/calificacion.module';
 import { MensajeModule } from './mensaje/mensaje.module';
+import { AuthModule } from './auth/auth.module';
 
 // entidades
 import { Usuario } from './usuario/entities/usuario.entity';
@@ -31,7 +32,7 @@ import { Mensaje } from './mensaje/entities/mensaje.entity';
       port: 3306,
       username: 'root',
       password: 'Admin',
-      database: 'ropo2',
+      database: 'ropo2beta',
       entities: [
         Usuario,
         Rol,
@@ -47,6 +48,7 @@ import { Mensaje } from './mensaje/entities/mensaje.entity';
     }),
 
     //esto es lo que había antes
+    AuthModule,
     UsuarioModule,
     RolModule,
     ClienteModule,

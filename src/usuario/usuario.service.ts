@@ -128,4 +128,45 @@ export class UsuarioService {
     await this.usuarioRepository.remove(usuario);
     return usuario;
   }
+
+    async agregarFavorito(idUsuario: number, idPublicacion: number) {
+    const usuario = await this.usuarioRepository.findOneBy({ idUsuario });
+    if (!usuario) throw new Error('Usuario no encontrado');
+
+    if (!usuario) {
+    throw new NotFoundException("Usuario no encontrado");
+  }
+
+    if (!usuario.favoritos) {
+    usuario.favoritos = [];
+  }
+
+    // Evitar duplicados
+    if (!usuario.favoritos.includes(idPublicacion)) {
+      usuario.favoritos.push(idPublicacion);
+    }
+
+    return this.usuarioRepository.save(usuario);
+  }
+
+  async quitarFavorito(idUsuario: number, idPublicacion: number) {
+    const usuario = await this.usuarioRepository.findOneBy({ idUsuario });
+    if (!usuario) throw new Error('Usuario no encontrado');
+
+    usuario.favoritos = usuario.favoritos.filter(id => id !== idPublicacion);
+
+    return this.usuarioRepository.save(usuario);
+  }
+
+  async obtenerFavoritos(idUsuario: number) {
+    const usuario = await this.usuarioRepository.findOneBy({ idUsuario });
+    if (!usuario) throw new NotFoundException('Usuario no encontrado');
+    if (!usuario.favoritos) {
+      usuario.favoritos = [];
+    }
+    return usuario.favoritos;
+  }
 }
+
+
+

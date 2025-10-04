@@ -32,6 +32,9 @@ export class Usuario {
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   fechaRegistro: Date;
 
+  @Column({ type: 'json', nullable: true })
+  favoritos: number[];
+  
   @ManyToOne(() => Rol, (rol) => rol.usuarios, { nullable: false })
   @JoinColumn({ name: 'idRol' })
   rol: Rol;

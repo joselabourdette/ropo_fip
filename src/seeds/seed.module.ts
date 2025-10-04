@@ -19,7 +19,7 @@ import { Mensaje } from '../mensaje/entities/mensaje.entity';
       port: 3306,
       username: 'root',
       password: 'Admin',
-      database: 'ropo2',
+      database: 'ropo2beta',
       entities: [
         Usuario,
         Rol,

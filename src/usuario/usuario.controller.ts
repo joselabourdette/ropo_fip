@@ -10,6 +10,7 @@ import {
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { AddFavoritoDto, RemoveFavoritoDto } from './dto/favoritos.dto';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -39,4 +40,26 @@ export class UsuarioController {
   remove(@Param('id') id: string) {
     return this.usuarioService.remove(+id);
   }
+
+@Post(':id/favoritos')
+  addFavorito(
+    @Param('id') idUsuario: number,
+    @Body() dto: AddFavoritoDto,
+  ) {
+    return this.usuarioService.agregarFavorito(idUsuario, dto.idPublicacion);
+  }
+
+  @Delete(':id/favoritos')
+  removeFavorito(
+    @Param('id') idUsuario: number,
+    @Body() dto: RemoveFavoritoDto,
+  ) {
+    return this.usuarioService.quitarFavorito(idUsuario, dto.idPublicacion);
+  }
+
+  @Get(':id/favoritos')
+  getFavoritos(@Param('id') idUsuario: number) {
+    return this.usuarioService.obtenerFavoritos(idUsuario);
+  }
+
 }
